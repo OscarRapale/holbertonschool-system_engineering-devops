@@ -1,0 +1,27 @@
+## Explanation of Infrastructure:
+
+    Load Balancer (HAProxy):
+        Why Added:
+            A load balancer distributes incoming traffic to multiple servers, ensuring that no single server is overwhelmed.
+            Configured as a cluster with another load balancer, it ensures high availability. If one load balancer fails, the other continues to distribute traffic.
+            The load balancer uses algorithms like round-robin or least connections to route traffic to the healthiest web server. In a clustered setup, the load balancers communicate to ensure consistent performance.
+
+    Web Server (Nginx):
+        Why Added:
+            The web server handles HTTP/HTTPS requests and serves static files such as HTML, CSS, and images.
+            Nginx is optimized for high performance, making it suitable for handling large numbers of simultaneous connections.
+            When a user visits the website, the web server delivers static content directly to the browser and forwards requests for dynamic content (such as database queries) to the application server.
+
+    Application Server:
+        Why Added:
+            The application server processes dynamic content and complex business logic.
+            This component is essential for handling tasks like user authentication, form submissions, and interactions with the database.
+            After receiving a request from the web server, the application server processes it, potentially interacting with the database, and generates dynamic content (e.g., user-specific information).
+
+    Database Server (MySQL):
+        Why Added:
+            A dedicated database server handles the storage and retrieval of persistent data, such as user profiles, blog posts, or orders.
+            By isolating the database on its own server, we ensure efficient data management and scaling.
+            The database stores structured data. When a query is sent (e.g., retrieving a user's profile), the database server processes the query and sends the data back to the application server.
+
+

@@ -1,0 +1,76 @@
+## Web Infrastructure
+
+3 Servers:
+
+    Server 1: Hosts the web server (Nginx) and application server.
+    Server 2: Hosts a replica application server for redundancy.
+    Server 3: Dedicated to the MySQL database.
+
+Load Balancer (HAProxy): Sits in front of the web servers to distribute traffic.
+Database: MySQL set up with a Primary-Replica (Master-Slave) configuration for better availability and performance.
+
+Load Balancer (HAProxy):
+
+    Why Added:
+        The load balancer distributes traffic across multiple servers, improving the system’s availability and handling more users.
+        Ensures that if one server goes down, traffic is rerouted to other available servers, preventing downtime.
+    Distribution Algorithm:
+        A common algorithm is Round Robin, where traffic is distributed evenly across all available servers in a circular order.
+        How it Works: For each new request, the load balancer forwards it to the next server in the pool, ensuring balanced utilization of resources.
+    Active-Active vs. Active-Passive Setup:
+        Active-Active: Both servers (Server 1 and Server 2) are actively serving requests. This increases resource utilization and fault tolerance. If one server fails, the other takes over seamlessly.
+        Active-Passive: One server (Active) handles all requests, while the other (Passive) remains on standby. If the active server fails, the passive one takes over.
+        In this setup: Active-Active is ideal, ensuring all servers share the workload equally and no resources are wasted.
+
+Servers:
+
+    Why Added:
+        Two application servers (Server 1 and Server 2) ensure redundancy and better performance, distributing traffic across them for higher availability.
+        The third server (Server 3) is dedicated to the database, separating the web and database layers for better performance and security.
+
+Web Server (Nginx):
+
+        Receives HTTP requests from the user’s browser.
+        Forwards dynamic content requests to the application server.
+        Serves static content like images, CSS, and JavaScript files.
+        Each application server (Server 1 and Server 2) runs Nginx for web server functionality.
+
+Application Server:
+   
+        Processes user requests and executes the application logic (e.g., Python, PHP, Node.js).
+        Retrieves data from the database when needed.
+        Two application servers (Server 1 and Server 2) are present to handle requests in parallel, improving fault tolerance and scalability.
+
+Database (MySQL):
+
+    Primary-Replica (Master-Slave) Cluster:
+        
+            The Primary node (Master) handles all write operations (inserts, updates, deletes).
+            The Replica node (Slave) handles read-only operations and receives a real-time copy of the database from the primary node via replication.
+            This configuration reduces the load on the primary server by offloading read operations to the replica and also provides a backup in case of a failure in the primary database.
+
+        Difference Between Primary and Replica:
+            The Primary (Master) can both read and write to the database. All write queries (inserts, updates) are sent here.
+            The Replica (Slave) is read-only and gets a copy of the data from the primary for redundancy and scaling of read operations.
+
+## Issues with This Infrastructure:
+
+    Single Points of Failure (SPOF):
+        SPOF in the Load Balancer:
+            If the load balancer (HAProxy) fails, the entire website will be inaccessible.
+            Solution: Introduce redundancy at the load balancer level by having multiple HAProxy instances with failover configurations.
+
+        SPOF in the Database (Primary Node):
+            If the primary database server fails, write operations to the database will be affected.
+
+    Security Issues:
+        No Firewall:
+            Without a firewall, the server is vulnerable to attacks. Firewalls should be added to restrict access to certain ports or IP addresses, enhancing security.
+
+        No HTTPS:
+            Without HTTPS, communication between the user and the server is insecure. Sensitive data like passwords can be intercepted by attackers.
+
+
+    No Monitoring:
+        Without monitoring, it's impossible to detect or prevent failures proactively.
+

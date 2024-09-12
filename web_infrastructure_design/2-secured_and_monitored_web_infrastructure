@@ -1,0 +1,44 @@
+## Components
+
+    Firewalls:
+        Why Added: To protect the servers from unauthorized access and malicious traffic.
+        Purpose: Firewalls filter incoming and outgoing traffic based on pre-configured security rules. They prevent unwanted traffic from reaching critical servers by only 
+        allowing specific traffic, such as HTTP/HTTPS traffic or database queries.
+        
+        Example Rules:
+            Only allow HTTP (port 80) and HTTPS (port 443) traffic through the firewall for web servers.
+            Only allow MySQL (port 3306) access from the web servers to the database server.
+
+    HTTPS (SSL Certificate):
+        Why Added:
+            To secure communication between the user's browser and the website.
+            Serving traffic over HTTPS ensures that all data exchanged is encrypted, protecting sensitive information such as login credentials from being intercepted by attackers.
+        How It Works:
+            The SSL certificate encrypts all traffic between the user and the load balancer.
+            When the user accesses www.foobar.com, the SSL certificate ensures secure HTTPS connections.
+
+    Monitoring Clients:
+        Why Added:
+            Monitoring ensures system administrators are aware of any issues such as high CPU usage, memory leaks, network bottlenecks, or abnormal traffic patterns.
+            It's used to detect problems in real time and prevent downtime or performance degradation.
+        How Monitoring Works:
+            Each server runs a monitoring client that collects data such as CPU, memory, disk usage, number of requests per second (QPS), and logs. This data is sent to a central monitoring platform (e.g., Sumologic, Prometheus) where administrators can visualize and analyze it.
+            To monitor QPS (Queries Per Second) on the web server, the monitoring tool tracks and aggregates the number of incoming web requests over time and raises alerts if QPS exceeds a certain threshold.
+
+## Explanation of Infrastructure Issues:
+
+    SSL Termination at the Load Balancer Level:
+        Problem: Terminating SSL at the load balancer means traffic between the load balancer and the web servers is not encrypted.
+
+        Issue: If there is any breach or interception within your internal network, this could expose sensitive data.
+
+    One MySQL Server Handling Writes:
+        Problem: Having a single MySQL server capable of handling writes creates a bottleneck, and if that server fails, write operations cannot proceed.
+
+        Issue: This creates a Single Point of Failure (SPOF) for database writes, limiting the scalability of write operations.
+
+    Servers with All Same Components:
+        Problem: If each server runs both the database, web server, and application server, it creates unnecessary resource usage and potential for failure.
+
+        Issue: This setup complicates scalability and makes it harder to isolate issues. If a server fails, the entire service could be affected (e.g., database, web server, and app server all going down).
+

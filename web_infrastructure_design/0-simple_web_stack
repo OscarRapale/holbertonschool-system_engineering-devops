@@ -1,0 +1,51 @@
+## User Request Flow:
+
+    The user types www.foobar.com in the browser.
+    The browser sends a request to resolve the domain name to an IP address via DNS.
+    The DNS resolves www.foobar.com to 8.8.8.8.
+    The browser sends an HTTP/HTTPS request to the server at 8.8.8.8 (your web server).
+    The web server (Nginx) forwards the request to the application server.
+    The application server processes the request, possibly querying the database.
+    The application server generates a response (such as an HTML page) and sends it back to the web server.
+    The web server forwards the response back to the user’s browser.
+
+
+
+Server:
+A physical or virtual machine that processes requests and serves web pages to users. It has resources like CPU, memory, and storage, and runs an operating system (e.g., Linux).
+Host the web server, application server, database, and application files. In this setup, the server has the IP address 8.8.8.8.
+
+Domain Name (foobar.com):
+A human-readable name that maps to the server's IP address (e.g., 8.8.8.8).
+Makes it easier for users to access the website instead of typing the IP address directly. Type of DNS Record for www: A CNAME record (Canonical Name Record) or A record can be used to map www.foobar.com to the server’s IP (8.8.8.8).
+
+Web Server (Nginx):
+Nginx receives HTTP requests from users’ browsers.
+It serves static content like HTML, CSS, JS files.
+For dynamic content, it forwards the request to the application server. Acts as a reverse proxy, sending user requests to the application server.
+
+Application Server:
+It runs the backend logic of your web application (e.g., PHP, Python, or Node.js).
+It processes user requests (e.g., retrieving data from the database, business logic).
+After processing, it sends the response back to the web server (Nginx), which in turn sends it back to the user.
+
+Application Files (Codebase):
+The actual code of the web application (e.g., HTML, CSS, JavaScript, PHP/Python/Node.js). It resides on the server and is executed by the application server.
+
+Database (MySQL):
+Stores all the data for the website (e.g., user accounts, blog posts, product listings).
+The application server queries the database to retrieve or store data.
+
+Communication:
+The server communicates with the user's computer via HTTP/HTTPS protocols. HTTPS provides an encrypted connection to ensure security.
+
+## Issues with the Infrastructure:
+
+Single Point of Failure (SPOF):
+Since there is only one server, if it goes down, the entire website becomes unavailable.
+
+Downtime During Maintenance:
+Any changes, such as deploying new code, require restarting the server or services like Nginx. This can cause temporary downtime.
+
+Scaling Issues:
+As traffic increases, a single server may not be able to handle all the requests, causing slowdowns or crashes.
